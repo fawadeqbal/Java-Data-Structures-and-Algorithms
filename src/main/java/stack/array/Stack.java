@@ -36,7 +36,7 @@ public class Stack {
 
     public int pop() {
         if (isEmpty()) {
-            throw new RuntimeException("Stack is in Underflow Condition");
+            throw new RuntimeException("Stack is in underflow Condition");
         } else {
             return data[top--];
         }
@@ -47,7 +47,7 @@ public class Stack {
         if (!isEmpty()) {
             return data[top];
         } else {
-            throw new RuntimeException("Stack is in Underflow Condition");
+            throw new RuntimeException("Stack is in underflow Condition");
         }
     }
 }
