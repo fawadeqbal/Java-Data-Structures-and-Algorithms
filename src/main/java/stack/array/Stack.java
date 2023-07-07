@@ -1,53 +1,48 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package stack.array;
 
-/**
- *
- * @author fawad
- */
-public class Stack {
-
-    private int[] data;
+public class Stack<T> {
+    private int maxSize;
+    private Object[] stackArray;
     private int top;
 
+    // Constructor
     public Stack(int size) {
-        this.data = new int[size];
-        this.top = -1;
+        maxSize = size;
+        stackArray = new Object[maxSize];
+        top = -1;
     }
 
+    // Check if the stack is empty
     public boolean isEmpty() {
-        return top == -1;
+        return (top == -1);
     }
 
+    // Check if the stack is full
     public boolean isFull() {
-        return top == data.length - 1;
+        return (top == maxSize - 1);
     }
 
-    public void push(int value) {
+    // Push an item onto the stack
+    public void push(T item) {
         if (isFull()) {
-            System.out.println("Stack is in Overflow Condition.");
-        } else {
-            data[++top] = value;
+            throw new IllegalStateException("Stack is full. Cannot push item.");
         }
+        stackArray[++top] = item;
     }
 
-    public int pop() {
+    // Pop an item from the stack
+    public T pop() {
         if (isEmpty()) {
-            throw new RuntimeException("Stack is in underflow Condition");
-        } else {
-            return data[top--];
+            throw new IllegalStateException("Stack is empty. Cannot pop item.");
         }
-
+        return (T) stackArray[top--];
     }
 
-    public int peek() {
-        if (!isEmpty()) {
-            return data[top];
-        } else {
-            throw new RuntimeException("Stack is in underflow Condition");
+    // Get the top item of the stack without removing it
+    public T peek() {
+        if (isEmpty()) {
+            throw new IllegalStateException("Stack is empty. Cannot peek item.");
         }
+        return (T) stackArray[top];
     }
 }

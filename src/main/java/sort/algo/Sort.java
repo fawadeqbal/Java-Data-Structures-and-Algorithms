@@ -10,6 +10,28 @@ package sort.algo;
  */
 public class Sort {
 
+    public static void print(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i] + "\t");
+        }
+    }
+
+    public static void selectionSort(int[] arr) {
+        int n = arr.length;
+
+        for (int i = 0; i < n - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < n; j++) {
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            int temp = arr[minIndex];
+            arr[minIndex] = arr[i];
+            arr[i] = temp;
+        }
+    }
+
     public static void insertionSort(int[] arr) {
         int n = arr.length;
         for (int i = 1; i < n; i++) {
@@ -21,10 +43,7 @@ public class Sort {
             }
             arr[j + 1] = key;
         }
-        for(int j=0;j<n;j++){
-            System.out.print(arr[j]+"\t");
-        }
-        System.out.println("");
+
     }
 
     public static void bubbleSort(int[] arr) {
@@ -38,16 +57,13 @@ public class Sort {
                 }
             }
         }
-        for(int j=0;j<n;j++){
-            System.out.print(arr[j]+"\t");
-        }
-        System.out.println("");
+
     }
 
     public static void main(String[] args) {
-        int[] arr={22,56,23,54,76,89,75,45};
+        int[] arr = {22, 56, 23, 54, 76, 89, 75, 45};
         insertionSort(arr);
-        
+        print(arr);
     }
 
 }

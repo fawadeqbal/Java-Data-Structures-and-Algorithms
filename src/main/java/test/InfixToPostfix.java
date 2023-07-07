@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package stack.app;
+package test;
+import java.util.Scanner;
 import stack.array.Stack;
 
 public class InfixToPostfix {
@@ -21,78 +18,94 @@ public class InfixToPostfix {
         return -1;
     }
 
+    // Check if a string is a two-digit number
+    static boolean isTwoDigitOperand(String str) {
+        return str.length() == 2 && Character.isDigit(str.charAt(0)) && Character.isDigit(str.charAt(1));
+    }
+
     // Convert infix expression to postfix expression
     static String infixToPostfix(String infix) {
         StringBuilder postfix = new StringBuilder();
-        Stack<Character> stack = new Stack<>(30);
+        Stack<String> stack = new Stack<>(infix.length());
 
         for (int i = 0; i < infix.length(); i++) {
             char ch = infix.charAt(i);
 
             if (Character.isLetterOrDigit(ch)) {
-                postfix.append(ch);
-            } else if (ch == '(') {
-                stack.push(ch);
-            } else if (ch == ')') {
-                while (!stack.isEmpty() && stack.peek() != '(') {
-                    postfix.append(stack.pop());
+                StringBuilder operand = new StringBuilder();
+                operand.append(ch);
+
+                // Check if the next character is also a letter or digit
+                while (i + 1 < infix.length() && Character.isLetterOrDigit(infix.charAt(i + 1))) {
+                    operand.append(infix.charAt(i + 1));
+                    i++;
                 }
-                if (!stack.isEmpty() && stack.peek() != '(') {
+
+                postfix.append(operand.toString());
+                postfix.append(" "); // Add a space separator
+            } else if (ch == '(') {
+                stack.push(Character.toString(ch));
+            } else if (ch == ')') {
+                while (!stack.isEmpty() && !stack.peek().equals("(")) {
+                    postfix.append(stack.pop());
+                    postfix.append(" "); // Add a space separator
+                }
+                if (!stack.isEmpty() && !stack.peek().equals("(")) {
                     return "Invalid Expression"; // Unmatched right parenthesis
                 } else {
                     stack.pop(); // Pop the left parenthesis
                 }
-            } else if (ch == '^') {
-                // Handle consecutive '^' operators
-                while (!stack.isEmpty() && precedence(ch) <= precedence(stack.peek())) {
-                    postfix.append(stack.pop());
-                }
-                stack.push(ch);
             } else {
-                while (!stack.isEmpty() && precedence(ch) <= precedence(stack.peek()) && stack.peek() != '^') {
+                while (!stack.isEmpty() && precedence(ch) <= precedence(stack.peek().charAt(0))) {
                     postfix.append(stack.pop());
+                    postfix.append(" "); // Add a space separator
                 }
-                stack.push(ch);
+                stack.push(Character.toString(ch));
             }
         }
 
         while (!stack.isEmpty()) {
-            if (stack.peek() == '(') {
+            if (stack.peek().equals("(")) {
                 return "Invalid Expression"; // Unmatched left parenthesis
             }
             postfix.append(stack.pop());
+            postfix.append(" "); // Add a space separator
         }
 
         return postfix.toString();
     }
 
     public static int evaluatePostfix(String postfix) {
-        Stack<Integer> stack = new Stack<>(50);
+        Stack<Integer> stack = new Stack<>(postfix.length());
 
-        for (char symbol : postfix.toCharArray()) {
-            if (Character.isDigit(symbol)) {
-                stack.push(symbol - '0');
+        String[] tokens = postfix.split(" ");
+        for (String token : tokens) {
+            if (isTwoDigitOperand(token)) {
+                stack.push(Integer.parseInt(token));
+            } else if (Character.isDigit(token.charAt(0))) {
+                stack.push(token.charAt(0) - '0');
             } else {
                 int operand2 = stack.pop();
                 int operand1 = stack.pop();
-                switch (symbol) {
-                    case '+':
+
+                switch (token) {
+                    case "+":
                         stack.push(operand1 + operand2);
                         break;
-                    case '-':
+                    case "-":
                         stack.push(operand1 - operand2);
                         break;
-                    case '*':
+                    case "*":
                         stack.push(operand1 * operand2);
                         break;
-                    case '/':
+                    case "/":
                         stack.push(operand1 / operand2);
                         break;
-                    case '^':
+                    case "^":
                         stack.push((int) Math.pow(operand1, operand2));
                         break;
                     default:
-                        throw new IllegalArgumentException("Invalid operator: " + symbol);
+                        throw new IllegalArgumentException("Invalid operator: " + token);
                 }
             }
         }
@@ -101,7 +114,9 @@ public class InfixToPostfix {
     }
 
     public static void main(String[] args) {
-        String infix = "2^2^2";
+        Scanner sc = new Scanner(System.in);
+        String infix = sc.next();
+
         String postfix = infixToPostfix(infix);
         System.out.println("Infix expression: " + infix);
         System.out.println("Postfix expression: " + postfix);
@@ -110,3 +125,5 @@ public class InfixToPostfix {
         System.out.println("Result: " + result);
     }
 }
+
+

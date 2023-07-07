@@ -8,44 +8,126 @@ package linklist.node;
  *
  * @author fawad
  */
+class Node {
+
+    int data;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+    }
+}
+
 public class SinglyLinkedList {
 
-    Node head; // head of the linked list
+    private Node head;
+    private int size;
 
-    // Node class
-    static class Node {
+    public SinglyLinkedList() {
+        head = null;
+        size = 0;
+    }
+    public int size(){
+        return size;
+    }
+    public boolean isEmpty() {
+        return head == null;
+    }
 
-        int data;
-        Node next;
-
-        Node(int data) {
-            this.data = data;
-            next = null;
+    public void addFirst(int value) {
+        Node n = new Node(value);
+        if (isEmpty()) {
+            head = n;
+            size++;
+        } else {
+            n.next = head;
+            head = n;
+            size++;
         }
     }
 
-    // Display the linked list
+    public void addAtEnd(int value) {
+        Node n = new Node(value);
+        if (isEmpty()) {
+            head = n;
+            size++;
+        } else {
+            Node p = head;
+            while (p.next != null) {
+                p = p.next;
+            }
+            p.next = n;
+            size++;
+        }
+    }
+
+    public void addAfter(int key, int value) {
+        Node n = new Node(value);
+        Node p = find(key);
+        if (p == null) {
+            System.out.println("Node with key " + key + " not found");
+            return;
+        }
+        n.next = p.next;
+        p.next = n;
+        size++;
+
+    }
+
+    public void delete(int key) {
+        Node temp = head;
+        Node prev = null;
+
+        if (temp != null && temp.data == key) {
+            head = temp.next; // Change the head node
+            size--;
+            return;
+        }
+        while (temp != null && temp.data != key) {
+            prev = temp;
+            temp = temp.next;
+
+        }
+
+        if (temp == null) {
+            System.out.println("Key is not found.");
+            return;
+        }
+        prev.next = temp.next;
+        size--;
+    }
+
+    public void deleteFromEnd() {
+        if (head == null) {
+            System.out.println("Linked list is empty");
+            return;
+        }
+        if (head.next == null) {
+            head = null;
+            size--;
+            return;
+        }
+        Node temp = head;
+        while (temp.next.next != null) {
+            temp = temp.next;
+        }
+        temp.next = null;
+        size--;
+    }
     public void display() {
-        Node temp = head;
-        while (temp != null) {
-            System.out.print(temp.data + " ");
-            temp = temp.next;
+
+        if (isEmpty()) {
+            System.out.println("List is Empty.");
+        } else {
+            Node n = head;
+            while (n != null) {
+                System.out.print(n.data + "\t");
+                n = n.next;
+            }
+            System.out.println("");
         }
-        System.out.println();
     }
 
-    // Count the number of nodes in the linked list
-    public int countNodes() {
-        int count = 0;
-        Node temp = head;
-        while (temp != null) {
-            count++;
-            temp = temp.next;
-        }
-        return count;
-    }
-
-    // Find a node with a given key value
     public Node find(int key) {
         Node temp = head;
         while (temp != null) {
@@ -54,82 +136,20 @@ public class SinglyLinkedList {
             }
             temp = temp.next;
         }
-        return null;
+        return null; 
     }
 
-    // Add a new node with given data at the beginning of the linked list
-    public void addAtFirst(int data) {
-        Node newNode = new Node(data);
-        newNode.next = head;
-        head = newNode;
-    }
+    public static void main(String[] args) {
+        SinglyLinkedList n = new SinglyLinkedList();
+        n.addFirst(12);
+        n.addAtEnd(20);
+        n.addAfter(12, 18);
+        System.out.println(n.size());
+        n.display();
+        n.delete(18);
+        n.display();
+        System.out.println(n.size());
 
-    // Add a new node with given data at the end of the linked list
-    public void addAtEnd(int data) {
-        Node newNode = new Node(data);
-        if (head == null) {
-            head = newNode;
-            return;
-        }
-        Node temp = head;
-        while (temp.next != null) {
-            temp = temp.next;
-        }
-        temp.next = newNode;
-    }
-
-    // Add a new node with given data after the node with a given key value
-    public void addAfter(int key, int data) {
-        Node newNode = new Node(data);
-        Node temp = find(key);
-        if (temp == null) {
-            System.out.println("Node with key " + key + " not found");
-            return;
-        }
-        newNode.next = temp.next;
-        temp.next = newNode;
-    }
-
-    // Delete the last node in the linked list
-    public void deleteFromEnd() {
-        if (head == null) {
-            System.out.println("Linked list is empty");
-            return;
-        }
-        if (head.next == null) {
-            head = null;
-            return;
-        }
-        Node temp = head;
-        while (temp.next.next != null) {
-            temp = temp.next;
-        }
-        temp.next = null;
-    }
-
-    public void delete(int key) {
-        Node temp = head;
-        Node prev = null;
-
-        // If the head node itself contains the key to be deleted
-        if (temp != null && temp.data == key) {
-            head = temp.next; // Change the head node
-            return;
-        }
-
-        // Search for the key to be deleted, keep track of the previous node as well
-        while (temp != null && temp.data != key) {
-            prev = temp;
-            temp = temp.next;
-        }
-
-        // If key was not present in the linked list
-        if (temp == null) {
-            return;
-        }
-
-        // Unlink the node from the linked list
-        prev.next = temp.next;
     }
 
 }
